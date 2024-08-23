@@ -2,360 +2,496 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f7f9;
+            font-family:   "Nunito Sans", sans-serif !important;
+        }
+        /* Custom styles for the sidebar */
+        #sidebar {
+            height: 100vh;
+    background-color: #fff;
+    border-right: 0.001px solid #dee2e626;
+    transition: all 0.3s;
+    box-shadow: rgba(0, 4, 3, 0.06) 0px 0px 29px;
         }
 
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
+        /* Hide sidebar when minimized */
+        .sidebar-collapsed #sidebar {
+            width: 0;
+            overflow: hidden;
         }
 
-        .container {
-            display: flex;
-            height: calc(100vh - 60px); /* Adjust based on header height */
-            margin-top: 20px;
+        .sidebar-collapsed #main-content {
+            margin-left: 0;
         }
 
-        .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: #fff;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            margin-bottom: 15px;
-        }
-
-        .sidebar ul li button {
-            background-color: #34495e;
-            border: none;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            text-align: left;
-            transition: background-color 0.3s;
-        }
-
-        .sidebar ul li button:hover {
-            background-color: #1abc9c;
-        }
-
-        .sidebar ul li .active {
-            background-color: #1abc9c;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .main-content .btn-container {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .main-content .btn-container button {
-            background-color: #3498db;
-            border: none;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .main-content .btn-container button:hover {
-            background-color: #2980b9;
-        }
-
-        .table-container {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .category-table, .aggregated-table {
+        /* Hide category buttons initially */
+        .category-buttons {
             display: none;
-            margin-top: 20px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Highlight active button */
+        .active {
+            background-color: #007bff;
+            color: white;
         }
 
-        th, td {
-            padding: 10px;
-            text-align: left;
+        .bg-light {
+            background-color: #fff !important;
         }
 
-        th {
-            color: #fff;
+        #content-area {
+            background-color: #F5F6FA;
         }
 
-        .category1 th {
-            background-color: #2c3e50;
+        .mt-4, .my-4{
+            margin-top: 0 !important;
+            padding-top: 2% !important;
+            padding-left: 2% !important;
+        }
+        .btn-light {
+            background-color: #fff;
+            box-shadow: none !important;
+        }
+        .btn-light:focus, .btn-light:hover {
+            background-color: #fff;
+            border: none !important;
+            box-shadow: none !important;
+
         }
 
-        .category2 th {
-            background-color: #1abc9c;
+        .btn-light{
+            margin: 0px 0px 0px 10% !important;
+            width: 70% !important;
+        }
+        .btn-light:hover{
+            margin: 0px 0px 0px 10% !important;
+            width: 70% !important;
         }
 
-        .category3 th {
-            background-color: #3498db;
+
+
+        .btn-light:not(:disabled):not(.disabled).active, .btn-light:not(:disabled):not(.disabled):active, .show>.btn-light.dropdown-toggle{
+        color: #212529;
+    background-color: #dae0e5;
+    border-color: #d3d9df;
+    margin: 0px 0px 0px 10% !important;
+    width: 70% !important;
+   
+        }
+        .search-bar {
+            border: 1px solid #d5d5d58d;
+           font-family:   "Nunito Sans", sans-serif !important;
+            font-size: 14px;
+            background-color: #F5F6FA;
+        }
+        .search-icon {
+            height: 47% !important;
         }
 
-        .aggregated th {
-            background-color: #34495e;
+.notif{
+    margin-top: 70%;
+}
+        #nb-notif {
+            width: 2%;
+     
+    height: 19px;
+    font-size: 11px;
         }
+
+        .translation-text {
+            margin-left: 4.5%;
+            font-size: 14px !important;
+            font-family:   "Nunito Sans", sans-serif !important;
+            color: #646464;
+        }
+
+        .row-icon {
+            color:#646464;
+            width: 17px !important;
+        }
+
+        .user-profile {
+            width: 44px !important;
+            height: 44px !important;
+        }
+        .user-name {
+            font-size: 14px !important;
+            color: #404040;
+            font-weight: bold;
+        }
+        .user-role {
+            font-size: 12px !important;
+            font-weight: 600;
+            color: #565656;
+        }
+
+        .setting-btn {
+            border: 1px solid #D6D6D6;
+            border-radius: 50%;
+            
+        }
+        
     </style>
 </head>
-<body>
-    <header>
-        <h1>Dashboard</h1>
-    </header>
+<body class="d-flex">
 
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <ul id="categories">
-                <li><button id="all" class="active" onclick="showCombinedTables(1)">Tout</button></li>
-                <li><button onclick="showCategories(1)">Catégorie 1</button></li>
-                <li><button onclick="showCategories(2)">Catégorie 2</button></li>
-                <li><button onclick="showCategories(3)">Catégorie 3</button></li>
-            </ul>
+    <!-- Sidebar -->
+    <nav id="sidebar" >
+        <div class="sidebar-header p-3">
+            <img src="./assets/images/Logo.png" alt="Logo" style="height: 40px;">
         </div>
+        <ul class="list-unstyled components">
+            <!-- Dashboard Button -->
+            <li class="default-buttons">
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button  id="dashboardButton" class="btn btn-light btn-block " onclick="setActive(this); window.location.href='index.html'">Dashboard</button>
+                </div>
+            </li>
+            <script>
+                document.addEventListener('DOMContentLoaded', (event) => {
+                    // Récupérer le bouton Dashboard par son ID
+                    const dashboardButton = document.getElementById('dashboardButton');
+                    
+                    // Appliquer la classe active au bouton Dashboard par défaut
+                    if (dashboardButton) {
+                        dashboardButton.classList.add('active');
+                        
+                        // Afficher la barre pour le bouton Dashboard
+                        let bar = dashboardButton.parentNode.querySelector('.absolute');
+                        if (bar) {
+                            bar.classList.remove('hidden');
+                        }
+                    }
+                });
+                </script>
+                
+            <!-- <li class="default-buttons">
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block" onclick="">Courrier</button>
+                </div>
+            </li> -->
+            <!-- Contact Button -->
+            <li class="default-buttons">
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button id="contactButton" class="btn btn-light btn-block" onclick="setActive(this); loadContent('contact.html')">Contact</button>
+                </div>
+            </li>
+           
+            <!-- Category Buttons Set 1 -->
+            <li class="category-buttons category-set-1">
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block active default-active" onclick="setActive(this); loadContent('all1.html')">Tout</button>
+                </div>
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block" onclick="setActive(this); loadContent('cat1b1.html')">Catégorie 1</button>
+                </div>
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block" onclick="setActive(this); loadContent('cat2b1.html')">Catégorie 2</button>
+                </div>
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block" onclick="setActive(this); loadContent('cat3b1.html')">Catégorie 3</button>
+                </div>
+            </li>
+            <!-- Category Buttons Set 2 -->
+            <li class="category-buttons category-set-2">
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block active default-active" onclick="setActive(this); loadContent('all2.html')">Tout</button>
+                </div>
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block" onclick="setActive(this); loadContent('cat4b2.html')">Catégorie 4</button>
+                </div>
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block" onclick="setActive(this); loadContent('cat5b2.html')">Catégorie 5</button>
+                </div>
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block" onclick="setActive(this); loadContent('cat6b2.html')">Catégorie 6</button>
+                </div>
+            </li>
+            <!-- Category Buttons Set 3 -->
+            <li class="category-buttons category-set-3">
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block active default-active" onclick="setActive(this); loadContent('all3.html')">Tout</button>
+                </div>
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block" onclick="setActive(this); loadContent('cat7b3.html')">Catégorie 7</button>
+                </div>
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block" onclick="setActive(this); loadContent('cat8b3.html')">Catégorie 8</button>
+                </div>
+                <div class="relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-sm hidden transition-all duration-300 ease-in-out"></div>
+                    <button class="btn btn-light btn-block" onclick="setActive(this); loadContent('cat9b3.html')">Catégorie 9</button>
+                </div>
+            </li>
+        </ul>
+        
+  
+        <div id="content"></div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Buttons under the header -->
-            <div class="btn-container">
-                <button onclick="showCombinedTables(1)">Bouton 1</button>
-                <button onclick="showCombinedTables(2)">Bouton 2</button>
-                <button onclick="showCombinedTables(3)">Bouton 3</button>
-            </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                // Initialiser le bouton Dashboard comme actif
+                const dashboardButton = document.getElementById('dashboardButton');
+                if (dashboardButton) {
+                    dashboardButton.classList.add('active');
+                    let bar = dashboardButton.parentNode.querySelector('.absolute');
+                    if (bar) {
+                        bar.classList.remove('hidden');
+                    }
+                }
+            });
+    
+            function loadContent(page) {
+                console.log("Chargement du contenu de " + page);
+                document.getElementById('content').innerHTML = 'Contenu chargé depuis ' + page;
+            }
+    
+            function setActive(button) {
+                // Désactiver tous les boutons
+                const allButtons = document.querySelectorAll('.btn');
+                allButtons.forEach(btn => {
+                    btn.classList.remove('active', 'btn-green');
+                    let bar = btn.parentNode.querySelector('.absolute');
+                    if (bar) {
+                        bar.classList.add('hidden');
+                    }
+                });
+    
+                // Activer le bouton cliqué
+                button.classList.add('active');
+                let bar = button.parentNode.querySelector('.absolute');
+                if (bar) {
+                    bar.classList.remove('hidden');
+                }
+    
+                // Désactiver le bouton Dashboard si ce n'est pas lui qui est cliqué
+                const dashboardButton = document.getElementById('dashboardButton');
+                if (dashboardButton && button.id !== 'dashboardButton') {
+                    dashboardButton.classList.remove('active');
+                    let bar = dashboardButton.parentNode.querySelector('.absolute');
+                    if (bar) {
+                        bar.classList.add('hidden');
+                    }
+                }
+            }
+        
 
-            <!-- Aggregated Table Content -->
-            <div id="aggregated-tables" class="table-container">
-                <div id="aggregated1" class="aggregated-table">
-                    <h3>Tableau Agrégé pour Bouton 1</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Contenu dynamique sera ajouté par JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-                <div id="aggregated2" class="aggregated-table">
-                    <h3>Tableau Agrégé pour Bouton 2</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Contenu dynamique sera ajouté par JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-                <div id="aggregated3" class="aggregated-table">
-                    <h3>Tableau Agrégé pour Bouton 3</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Contenu dynamique sera ajouté par JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
-            <!-- Category Table Content -->
-            <div id="tables" class="table-container">
-                <div id="category1" class="category-table category1">
-                    <h3>Tableau pour Catégorie 1</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Colonne A</th>
-                                <th>Colonne B</th>
-                                <th>Colonne C</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Cat1 Data A1</td>
-                                <td>Cat1 Data B1</td>
-                                <td>Cat1 Data C1</td>
-                            </tr>
-                            <tr>
-                                <td>Cat1 Data A2</td>
-                                <td>Cat1 Data B2</td>
-                                <td>Cat1 Data C2</td>
-                            </tr>
-                        </tbody>
-                    </table>
+        </script>
+
+      
+     
+        
+    </nav>
+
+    <!-- Main content -->
+    <div id="main-content" class="flex-grow-1">
+        <!-- Header -->
+<header class="d-flex justify-content-between align-items-center p-2 bg-light shadow-sm">
+    <div class="d-flex align-items-center">
+        <!-- Toggle Sidebar Button -->
+        <button id="toggle-sidebar" class="btn mr-3 ml-3"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 25" fill="none">
+            <g opacity="0.898019">
+            <path d="M3.75 6.5625H20.25V7.9375H3.75V6.5625ZM3.75 12.0625H20.25V13.4375H3.75V12.0625ZM3.75 17.5625H20.25V18.9375H3.75V17.5625Z" fill="#202224"/>
+            </g>
+            </svg></button>
+
+       
+        <div class="relative">
+            <input type="text" placeholder="Rechercher..." class="w-64 pl-10 pr-4 py-2 rounded-full border-1 border-#D5D5D5-500 focus:outline-none focus:border-#D5D5D5-600 focus:ring-1 focus:ring-#D5D5D5-100 transition duration-300 search-bar">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-#202224-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" search-icon>
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+        </div>
+    </div>
+    <div class="d-flex align-items-center">
+        <a href="#" class="mr-3">
+            <div class="relative inline-block notif">
+                 
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21.5" viewBox="0 0 24 26" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0277 0C7.73472 0 5.80843 1.72411 5.55522 4.00306L4.5 13.5H1.5C0.671573 13.5 0 14.1716 0 15V16.5C0 17.3284 0.671573 18 1.5 18H22.5C23.3284 18 24 17.3284 24 16.5V15C24 14.1716 23.3284 13.5 22.5 13.5H19.5L18.4448 4.00306C18.1916 1.72411 16.2653 0 13.9723 0H10.0277Z" fill="#4880FF"/>
+                    <rect opacity="0.3" x="9" y="19.5" width="6" height="6" rx="2.25" fill="#FF0000"/>
+                    </svg>
+                
+                <!-- Badge de notification -->
+                <span id="nb-notif" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                  2
+                </span>
+              </div> <!-- Notification icon -->
+        </a>
+        <!-- <a href="#" class="mr-3">  </a>-->
+            <div class="relative inline-block text-left">
+                <div>
+                  <button type="button" class="inline-flex justify-center items-center w-full rounded-md      px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none      " id="options-menu" aria-haspopup="true" aria-expanded="true">
+                                        
+                    <img src="./assets/images/Flag.png" alt="">
+                    <p class="translation-text">
+                    English</p>
+                    <!-- Icône de flèche vers le bas -->
+                    <svg class="-mr-1 ml-2 h-5 w-5 row-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
                 </div>
-                <div id="category2" class="category-table category2">
-                    <h3>Tableau pour Catégorie 2</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Colonne D</th>
-                                <th>Colonne E</th>
-                                <th>Colonne F</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Cat2 Data D1</td>
-                                <td>Cat2 Data E1</td>
-                                <td>Cat2 Data F1</td>
-                            </tr>
-                            <tr>
-                                <td>Cat2 Data D2</td>
-                                <td>Cat2 Data E2</td>
-                                <td>Cat2 Data F2</td>
-                            </tr>
-                        </tbody>
-                    </table>
+              
+                <!-- Menu déroulant (caché par défaut, à gérer avec JavaScript) -->
+                <div class="hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                  <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Français</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Español</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Deutsch</a>
+                  </div>
                 </div>
-                <div id="category3" class="category-table category3">
-                    <h3>Tableau pour Catégorie 3</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Colonne G</th>
-                                <th>Colonne H</th>
-                                <th>Colonne I</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Cat3 Data G1</td>
-                                <td>Cat3 Data H1</td>
-                                <td>Cat3 Data I1</td>
-                            </tr>
-                            <tr>
-                                <td>Cat3 Data G2</td>
-                                <td>Cat3 Data H2</td>
-                                <td>Cat3 Data I2</td>
-                            </tr>
-                        </tbody>
-                    </table>
+              </div>
+       
+        <div class="dropdown">
+            <!-- <a href="#" class="d-flex align-items-center text-decoration-none" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <img src="./assets/images/user.png" alt="user">
+                <span>Nom d'utilisateur</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="#">Logout</a>
+            </div> -->
+            <div class="flex items-center justify-between  bg-white rounded-lg">
+                <!-- Image de profil -->
+                <div class="flex-shrink-0">
+                    
+                  <img class="h-12 w-12 rounded-full user-profile" src="./assets/images/user.png" alt="Photo de profil">
+                </div>
+                
+                <!-- Informations de l'utilisateur -->
+                <div class="ml-4 flex-grow">
+                  <div class="text-lg user-name ">John Doe</div>
+                  <div class="text-sm user-role ">Développeur Web</div>
+                </div>
+                
+                <!-- Icône des paramètres -->
+                <div class="ml-3 setting-btn">
+                  <button class="p-1  rounded-full  focus:outline-none ">
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+                    </svg> -->
+                    <svg class="    h-2 w-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                  </button>
+                </div>
+              </div>
+        </div>
+    </div>
+</header>
+
+
+        <!-- Content -->
+        <div class="container-fluid mt-4" id="content-area">
+            <!-- Default dashboard content -->
+            <h2>Bienvenue sur le Dashboard</h2>
+            <!-- Dashboard buttons -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <button class="btn btn-block btn-primary dashboard-button" data-set="1">Bouton 1</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <button class="btn btn-block btn-secondary dashboard-button" data-set="2">Bouton 2</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <button class="btn btn-block btn-success dashboard-button" data-set="3">Bouton 3</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        // Sample data for aggregation with unique values for each category
-        const data = {
-            1: {
-                category1: [
-                    { item: 'Cat1 Item A1', details: 'Cat1 Details A1' },
-                    { item: 'Cat1 Item A2', details: 'Cat1 Details A2' }
-                ],
-                category2: [
-                    { item: 'Cat1 Item B1', details: 'Cat1 Details B1' },
-                    { item: 'Cat1 Item B2', details: 'Cat1 Details B2' }
-                ],
-                category3: [
-                    { item: 'Cat1 Item C1', details: 'Cat1 Details C1' },
-                    { item: 'Cat1 Item C2', details: 'Cat1 Details C2' }
-                ]
-            },
-            2: {
-                category1: [
-                    { item: 'Cat2 Item A1', details: 'Cat2 Details A1' },
-                    { item: 'Cat2 Item A2', details: 'Cat2 Details A2' }
-                ],
-                category2: [
-                    { item: 'Cat2 Item B1', details: 'Cat2 Details B1' },
-                    { item: 'Cat2 Item B2', details: 'Cat2 Details B2' }
-                ],
-                category3: [
-                    { item: 'Cat2 Item C1', details: 'Cat2 Details C1' },
-                    { item: 'Cat2 Item C2', details: 'Cat2 Details C2' }
-                ]
-            },
-            3: {
-                category1: [
-                    { item: 'Cat3 Item A1', details: 'Cat3 Details A1' },
-                    { item: 'Cat3 Item A2', details: 'Cat3 Details A2' }
-                ],
-                category2: [
-                    { item: 'Cat3 Item B1', details: 'Cat3 Details B1' },
-                    { item: 'Cat3 Item B2', details: 'Cat3 Details B2' }
-                ],
-                category3: [
-                    { item: 'Cat3 Item C1', details: 'Cat3 Details C1' },
-                    { item: 'Cat3 Item C2', details: 'Cat3 Details C2' }
-                ]
-            }
-        };
-
-        function showCombinedTables(buttonId) {
-            // Hide all category tables
-            document.querySelectorAll('.category-table').forEach(table => table.style.display = 'none');
-
-            // Show aggregated tables for the selected button
-            document.querySelectorAll('.aggregated-table').forEach(table => table.style.display = 'none');
-            document.getElementById('aggregated' + buttonId).style.display = 'block';
-
-            // Fetch and display aggregated data
-            const aggregatedTableBody = document.querySelector('#aggregated' + buttonId + ' tbody');
-            aggregatedTableBody.innerHTML = '';
-            for (const category in data[buttonId]) {
-                data[buttonId][category].forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `<td>${item.item}</td><td>${item.details}</td>`;
-                    aggregatedTableBody.appendChild(row);
-                });
-            }
+        function loadContent(url) {
+            $('#content-area').load(url);
         }
 
-        function showCategories(categoryId) {
-            // Hide all aggregated tables
-            document.querySelectorAll('.aggregated-table').forEach(table => table.style.display = 'none');
+        // function refreshDashboard() {
+        //     $('#content-area').html(`
+        //         <h2>Bienvenue sur le Dashboard</h2>
+        //         <!-- Dashboard buttons -->
+        //         <div class="row">
+        //             <div class="col-md-4">
+        //                 <div class="card">
+        //                     <div class="card-body">
+        //                         <button class="btn btn-block btn-primary dashboard-button" data-set="1">Bouton 1</button>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //             <div class="col-md-4">
+        //                 <div class="card">
+        //                     <div class="card-body">
+        //                         <button class="btn btn-block btn-secondary dashboard-button" data-set="2">Bouton 2</button>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //             <div class="col-md-4">
+        //                 <div class="card">
+        //                     <div class="card-body">
+        //                         <button class="btn btn-block btn-success dashboard-button" data-set="3">Bouton 3</button>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     `);
+        //     $('.default-buttons').show();
+        //     $('.category-buttons').hide();
+        // }
 
-            // Show category table for the selected category
-            document.querySelectorAll('.category-table').forEach(table => table.style.display = 'none');
-            document.getElementById('category' + categoryId).style.display = 'block';
-        }
+        $('#toggle-sidebar').click(function() {
+            $('body').toggleClass('sidebar-collapsed');
+        });
 
-        // Show combined tables for default button on page load
-        showCombinedTables(1);
+        $('.dashboard-button').click(function() {
+            var setId = $(this).data('set');
+            $('.default-buttons').hide();
+            $('.category-buttons').hide();
+            $('.category-set-' + setId).show();
+            loadContent('all' + setId + '.html');
+        });
     </script>
 </body>
 </html>
